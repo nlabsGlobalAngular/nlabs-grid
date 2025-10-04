@@ -1,0 +1,93 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🔧 Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: 📦 Install dependencies
+      run: npm ci
+    
+    - name: 🔍 Lint code
+      run: npm run lint --if-present
+    
+    - name: 🏗️ Build project
+      run: npm run build
+    
+    - name: 🧪 Run tests
+      run: npm test --if-present -- --watch=false --browsers=ChromeHeadless
+    
+    - name: 📊 Upload coverage
+      if: matrix.node-version == '20.x'
+      uses: codecov/codecov-action@v3
+      with:
+        fail_ci_if_error: false
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: 📦 Install dependencies
+      run: npm ci
+    
+    - name: 🔍 Check formatting
+      run: npm run format:check --if-present || echo "No format check configured"
+    
+    - name: 🛡️ Security audit
+      run: npm audit --audit-level=high || echo "Security audit completed with warnings"
+
+  publish:
+    needs: [build-and-test, code-quality]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
+    
+    - name: 📦 Install dependencies
+      run: npm ci
+    
+    - name: 🏗️ Build library
+      run: npm run build:lib
+    
+    - name: 📤 Publish to NPM (manual trigger)
+      if: contains(github.event.head_commit.message, '[publish]')
+      run: npm publish --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

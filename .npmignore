@@ -1,0 +1,57 @@
+# Source files (only dist goes to npm)
+src/
+!src/**/*.d.ts
+
+# Config files
+angular.json
+tsconfig.json
+tsconfig.app.json
+tsconfig.spec.json
+karma.conf.js
+.editorconfig
+
+# Tests
+*.spec.ts
+/coverage
+
+# Build files
+.angular/
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Docs (optional - keep if you want them in npm package)
+ADVANCED-CUSTOMIZATION.md
+CUSTOM-CELLS-FOOTER.md
+FOOTER-CUSTOMIZATION.md
+SMART-DEFAULTS.md
+TEMPLATE-BASED-CUSTOMIZATION.md
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
+.env
+.env.*

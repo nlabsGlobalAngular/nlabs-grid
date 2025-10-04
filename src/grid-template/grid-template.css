@@ -1,0 +1,341 @@
+.grid-container {
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.grid-container h1 {
+  color: var(--text-primary, #333);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.grid-container p {
+  color: var(--text-secondary, #666);
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+/* Action Buttons Styles */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 14px;
+  gap: 6px; /* Space between icon and text */
+}
+
+.btn-text {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-edit:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #63408a 100%);
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, #e082ea 0%, #e4465b 100%);
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.btn-save:hover {
+  background: linear-gradient(135deg, #3e9bed 0%, #00e1ed 100%);
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: linear-gradient(135deg, #e95f89 0%, #edd02f 100%);
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  padding: 10px 24px;
+  font-size: 15px;
+  gap: 8px;
+}
+
+.btn-add:hover {
+  background: linear-gradient(135deg, #0e8078 0%, #2dd368 100%);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #868f96 0%, #596164 100%);
+  color: white;
+  padding: 10px 24px;
+  font-size: 15px;
+  gap: 8px;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #75808a 0%, #484e51 100%);
+}
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+/* ========================================
+   MODAL FORM STYLES
+   ======================================== */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-primary, #212529);
+  font-size: 14px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-primary, #212529);
+  background: var(--bg-primary, #ffffff);
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-color, #4f46e5);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-control:disabled {
+  background: var(--bg-tertiary, #f1f3f5);
+  cursor: not-allowed;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color, #dee2e6);
+}
+
+.modal-actions .btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: var(--bg-tertiary, #f1f3f5);
+  color: var(--text-primary, #212529);
+  border: 1px solid var(--border-color, #dee2e6);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover, #e9ecef);
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Delete Confirmation Styles */
+.delete-confirmation {
+  text-align: center;
+  padding: 20px;
+}
+
+.warning-icon {
+  margin: 0 auto 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--danger-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+  }
+}
+
+.warning-icon svg {
+  color: var(--danger-color, #ef4444);
+  width: 40px;
+  height: 40px;
+}
+
+.delete-confirmation h4 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--danger-color, #ef4444);
+  margin: 0 0 12px 0;
+  text-shadow: 0 2px 4px var(--danger-color-alpha, rgba(239, 68, 68, 0.1));
+}
+
+.delete-confirmation p {
+  font-size: 16px;
+  color: var(--text-secondary, #6c757d);
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+}
+
+.record-info {
+  background: var(--bg-secondary, #f8f9fa);
+  border: 2px solid var(--border-color, #dee2e6);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: left;
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text-secondary, #6c757d);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.05));
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light, rgba(0, 0, 0, 0.06));
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row strong {
+  color: var(--text-primary, #212529);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.info-row span {
+  color: var(--text-primary, #6c757d);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.record-info strong {
+  color: var(--text-primary, #212529);
+  font-weight: 700;
+  display: inline-block;
+  min-width: 120px;
+}
+
+.delete-confirmation .modal-actions {
+  margin-top: 28px;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 15px;
+  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.btn-danger svg {
+  width: 18px;
+  height: 18px;
+}

@@ -1,0 +1,36 @@
+<div class="column-menu-overlay" *ngIf="visible" (click)="close()">
+      <div class="column-menu" (click)="$event.stopPropagation()">
+        <div class="column-menu-header">
+          <h3>Column Visibility</h3>
+          <button (click)="close()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="column-menu-actions">
+          <button (click)="showAll()">Show All</button>
+          <button (click)="hideAll()">Hide All</button>
+        </div>
+        
+        <div class="column-menu-search">
+          <input type="text" 
+                 placeholder="Search columns..." 
+                 [(ngModel)]="searchTerm">
+        </div>
+        
+        <div class="column-list">
+          <div class="column-item" 
+               *ngFor="let col of filteredColumns"
+               [class.locked]="col.locked">
+            <label>
+              <input type="checkbox" 
+                     [checked]="col.visible"
+                     [disabled]="col.locked"
+                     (change)="toggleColumn(col)">
+              <span>{{ col.header || col.field }}</span>
+            </label>
+            <i class="fas fa-lock" *ngIf="col.locked"></i>
+          </div>
+        </div>
+      </div>
+    </div>

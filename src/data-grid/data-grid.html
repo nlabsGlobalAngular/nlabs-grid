@@ -1,0 +1,708 @@
+<div class="data-grid" 
+     [attr.data-theme]="currentTheme" 
+     [style.width]="width"
+     [style.max-width]="maxWidth">
+  <!-- Grid Toolbar -->
+  @if (config.exportable || config.columnMenu || config.globalSearch) {
+    <div class="grid-toolbar">
+      <div class="toolbar-left">
+        @if (config.globalSearch) {
+          <div class="search-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" 
+                   class="global-search" 
+                   placeholder="Search all columns..."
+                   [(ngModel)]="globalSearchTerm"
+                   (input)="onGlobalSearch()">
+          </div>
+        }
+      </div>
+      
+      <div class="toolbar-right">
+        <!-- Add Button (Optional) -->
+        @if (showAddButton) {
+          <button class="btn btn-add" (click)="handleAddClick()" title="Add New Record">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add</span>
+          </button>
+        }
+
+        <!-- Theme Toggle Button -->
+        <button class="btn btn-theme" (click)="toggleTheme()" title="Toggle Theme">
+          @if (currentTheme === 'light') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          }
+        </button>
+        
+        @if (config.exportable) {
+          <div class="export-dropdown">
+            <button class="btn btn-export" (click)="toggleExportMenu()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Export
+              <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            
+            @if (exportMenuVisible) {
+              <div class="export-menu">
+                <button class="export-option" (click)="exportToExcel()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                  Export to Excel
+                </button>
+                <button class="export-option" (click)="exportToPDF()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                  Export to PDF
+                </button>
+              </div>
+            }
+          </div>
+        }
+        @if (config.columnMenu) {
+          <button class="btn btn-columns" (click)="toggleColumnMenu()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            Columns
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Column Menu Modal -->
+  @if (columnMenuVisible) {
+    <div class="modal-overlay" (click)="columnMenuVisible = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Column Visibility</h3>
+          <button class="close-btn" (click)="columnMenuVisible = false">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="column-list">
+            @for (column of allColumns; track column.field) {
+              <div class="column-item">
+                <input type="checkbox" 
+                       [checked]="column.visible !== false" 
+                       (change)="toggleColumnVisibility(column)"
+                       [id]="'col-' + column.field">
+                <label [for]="'col-' + column.field">
+                  {{ column.header || column.field }}
+                </label>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="columnMenuVisible = false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Advanced Filter Modal -->
+  @if (showFilterModal && currentFilterColumn) {
+    <div class="modal-overlay" (click)="closeFilterModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Filter: {{ currentFilterColumn.header || currentFilterColumn.field }}</h3>
+          <button class="close-btn" (click)="closeFilterModal()">×</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="filter-form">
+            <!-- Filter Operator Selection -->
+            @if (config.advancedFiltering) {
+              <div class="filter-group">
+                <label>Operator:</label>
+                <select [(ngModel)]="currentFilterOperator">
+                  @if (currentFilterColumn.filterType === 'text') {
+                    <option value="contains">Contains</option>
+                    <option value="notcontains">Not Contains</option>
+                    <option value="eq">Equals</option>
+                    <option value="neq">Not Equals</option>
+                    <option value="startswith">Starts With</option>
+                    <option value="endswith">Ends With</option>
+                    <option value="isempty">Is Empty</option>
+                    <option value="isnotempty">Is Not Empty</option>
+                  }
+                  @if (currentFilterColumn.filterType === 'number') {
+                    <option value="eq">Equals</option>
+                    <option value="neq">Not Equals</option>
+                    <option value="lt">Less Than</option>
+                    <option value="lte">Less Than or Equal</option>
+                    <option value="gt">Greater Than</option>
+                    <option value="gte">Greater Than or Equal</option>
+                    <option value="between">Between</option>
+                  }
+                  @if (currentFilterColumn.filterType === 'date') {
+                    <option value="eq">Equals</option>
+                    <option value="neq">Not Equals</option>
+                    <option value="lt">Before</option>
+                    <option value="lte">Before or Equal</option>
+                    <option value="gt">After</option>
+                    <option value="gte">After or Equal</option>
+                    <option value="between">Between</option>
+                  }
+                </select>
+              </div>
+            }
+            
+            <!-- Filter Value Input -->
+            @if (currentFilterColumn.filterType === 'text') {
+              <div class="filter-group">
+                <label>Value:</label>
+                <input type="text" 
+                       [(ngModel)]="filterSearchTerm" 
+                       placeholder="Enter filter value...">
+              </div>
+            }
+
+            @if (currentFilterColumn.filterType === 'number') {
+              <div class="filter-group">
+                <label>Value:</label>
+                <input type="number" 
+                       [(ngModel)]="filterSearchTerm" 
+                       placeholder="Enter number...">
+              </div>
+              @if (currentFilterOperator === 'between') {
+                <div class="filter-group">
+                  <label>To:</label>
+                  <input type="number" 
+                         [(ngModel)]="filterSearchTerm2" 
+                         placeholder="To...">
+                </div>
+              }
+            }
+
+            @if (currentFilterColumn.filterType === 'date') {
+              <div class="filter-group">
+                <label>Date:</label>
+                <input type="date" 
+                       [(ngModel)]="filterSearchTerm">
+              </div>
+              @if (currentFilterOperator === 'between') {
+                <div class="filter-group">
+                  <label>To:</label>
+                  <input type="date" 
+                         [(ngModel)]="filterSearchTerm2">
+                </div>
+              }
+            }
+
+            @if (currentFilterColumn.filterType === 'select' || currentFilterColumn.filterType === 'multiselect') {
+              <div class="filter-group">
+                <label>Search:</label>
+                <input type="text" 
+                       [(ngModel)]="filterSearchTerm" 
+                       placeholder="Search values...">
+              </div>
+              <div class="filter-options">
+                @for (value of getFilteredValues(); track value) {
+                  <div class="filter-option">
+                    <input type="checkbox" 
+                           [checked]="selectedFilterValues.has(value)"
+                           (change)="toggleFilterValue(value)"
+                           [id]="'filter-' + value">
+                    <label [for]="'filter-' + value">
+                      {{ value }}
+                    </label>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeFilterModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Cancel
+          </button>
+          <button class="btn btn-danger" (click)="clearCurrentFilter()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Clear
+          </button>
+          <button class="btn btn-primary" (click)="applyFilter()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Loading Overlay -->
+  @if (loading) {
+    <div class="loading-overlay">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    </div>
+  }
+
+  <!-- Grouping Area -->
+  @if (config.dragGrouping) {
+    <div class="grouping-area" 
+         (drop)="onGroupDrop($event)" 
+         (dragover)="$event.preventDefault()">
+      @if (groupDescriptors.length === 0) {
+        <span class="grouping-placeholder">Drag columns here to group</span>
+      } @else {
+        @for (group of groupDescriptors; track group.field; let i = $index) {
+          <div class="group-chip">
+            <span>{{ getColumnHeader(group.field) }}</span>
+            <span class="remove-group" (click)="removeGroup(i)">×</span>
+          </div>
+        }
+      }
+    </div>
+  }
+
+  <!-- Main Grid Table -->
+  <div class="grid-table-wrapper">
+    <table class="grid-table">
+      <!-- Table Header -->
+      <thead>
+        <tr class="grid-header-row">
+          <!-- Selection Column -->
+          @if (config.selectable) {
+            <th class="grid-cell selection-cell" [class.pinned-left]="true">
+              @if (config.multiSelect) {
+                <input type="checkbox" 
+                       [checked]="isAllSelected()"
+                       [indeterminate]="isSomeSelected()"
+                       (change)="toggleSelectAll()">
+              }
+            </th>
+          }
+
+          <!-- Data Columns -->
+          @for (column of visibleColumns; track column.field) {
+            <th class="grid-cell header-cell"
+                [style.width]="column.width"
+                [style.min-width]="column.minWidth"
+                [style.max-width]="column.maxWidth"
+                [class.sortable]="column.sortable && config.sortable"
+                [class.sorted]="getSortDirection(column.field)"
+                [class.pinned-left]="column.pinned === 'left'"
+                [class.pinned-right]="column.pinned === 'right'"
+                [class.groupable]="config.dragGrouping"
+                (click)="onHeaderClick(column, $event)"
+                draggable="true"
+                (dragstart)="onDragStart(column, $event)"
+                (dragover)="onDragOver($event)"
+                (drop)="onDrop(column, $event)">
+              
+              <div class="header-content">
+                <div class="header-title">
+                  @if (column.headerContent) {
+                    <!-- Custom header content (HTML support) -->
+                    <span class="header-text" [innerHTML]="getHeaderContent(column)"></span>
+                  } @else {
+                    <!-- Default header text -->
+                    <span class="header-text">{{ column.header || column.field }}</span>
+                  }
+                  
+                  <!-- Multi-Sort Indicator -->
+                  @if (getSortDirection(column.field)) {
+                    <span class="sort-indicator" [class.sorted]="getSortDirection(column.field)">
+                      @if (getSortDirection(column.field) === 'asc') {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
+                      } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      }
+                      @if (config.multiSort && getSortPriority(column.field) > 0) {
+                        <span class="sort-priority">{{ getSortPriority(column.field) }}</span>
+                      }
+                    </span>
+                  }
+                </div>
+
+                <div class="header-actions">
+                  <!-- Filter Button -->
+                  @if (column.filterable && config.filterable) {
+                    <button class="filter-btn"
+                            [class.filtered]="isColumnFiltered(column.field)"
+                            (click)="openFilterModalWithEvent(column, $event)"
+                            title="Filter">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                      </svg>
+                    </button>
+                  }
+
+                  <!-- Pin Button -->
+                  @if (config.pinnable) {
+                    <button class="pin-btn" 
+                            (click)="togglePinColumn(column, $event)"
+                            [class.pinned]="column.pinned"
+                            [title]="column.pinned ? 'Unpin' : 'Pin'">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 17v5"></path>
+                        <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
+                      </svg>
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <!-- Resize Handle -->
+              @if (config.resizable) {
+                <div class="resize-handle" (mousedown)="startResize(column, $event)"></div>
+              }
+            </th>
+          }
+        </tr>
+
+        <!-- Inline Search Row -->
+        @if (config.inlineSearch) {
+          <tr class="search-row">
+            <!-- Selection Column -->
+            @if (config.selectable) {
+              <th class="search-cell" [class.pinned-left]="true"></th>
+            }
+
+            <!-- Search Inputs -->
+            @for (column of visibleColumns; track column.field) {
+              <th class="search-cell"
+                  [class.pinned-left]="column.pinned === 'left'"
+                  [class.pinned-right]="column.pinned === 'right'">
+                @if (column.filterable !== false) {
+                  <input type="text"
+                         class="column-search-input"
+                         [placeholder]="'Search ' + (column.header || column.field) + '...'"
+                         [(ngModel)]="columnSearchTerms[column.field]"
+                         (input)="onColumnSearch(column.field)"
+                         (click)="$event.stopPropagation()">
+                }
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+
+      <!-- Table Body -->
+      <tbody>
+        @if (groupDescriptors.length > 0) {
+          <!-- Grouped Data -->
+          @for (group of getGroupedData(); track group.value) {
+            <tr class="group-header-row">
+              <td [attr.colspan]="getColspan()" class="group-cell">
+                <button class="group-toggle" (click)="toggleGroup(group)">
+                  {{ group.expanded ? '−' : '+' }}
+                </button>
+                <strong>{{ group.field }}:</strong> {{ group.value }}
+                <span class="group-count">({{ group.items.length }} items)</span>
+                @if (group.aggregates) {
+                  <span class="group-aggregates">{{ formatAggregates(group.aggregates) }}</span>
+                }
+              </td>
+            </tr>
+
+            @if (group.expanded) {
+              @for (item of group.items; track trackByItem($index, item); let i = $index) {
+                <tr class="grid-row"
+                    [class.selected]="isRowSelected(item)"
+                    [class.even]="$even"
+                    [class.odd]="$odd"
+                    [class.hover]="config.hover">
+                  
+                  @if (config.selectable) {
+                    <td class="grid-cell selection-cell">
+                      <input type="checkbox" 
+                             [checked]="isRowSelected(item)"
+                             (change)="toggleRowSelection(item)">
+                    </td>
+                  }
+
+                  @for (column of visibleColumns; track column.field) {
+                    <td class="grid-cell data-cell"
+                        [class]="getCellClass(column, item)"
+                        [class.pinned-left]="column.pinned === 'left'"
+                        [class.pinned-right]="column.pinned === 'right'"
+                        [style.width]="column.width">
+                      
+                      @if (column.cellTemplate) {
+                        <!-- Custom cell template -->
+                        <span class="cell-content" [innerHTML]="getCellHtml(item, column, i)"></span>
+                      } @else if (column.template) {
+                        <ng-container *ngTemplateOutlet="column.template; context: { $implicit: item, column: column }">
+                        </ng-container>
+                      } @else {
+                        <span class="cell-content">
+                          {{ formatCellValue(getCellValue(item, column, i), column) }}
+                        </span>
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+            }
+          }
+        } @else {
+          <!-- Ungrouped Data -->
+          @for (item of displayData; track trackByItem($index, item); let i = $index) {
+            <tr class="grid-row"
+                [class.selected]="isRowSelected(item)"
+                [class.even]="$even"
+                [class.odd]="$odd"
+                [class.hover]="config.hover"
+                [class.editable]="config.editable && editingRow === item">
+              
+              @if (config.selectable) {
+                <td class="grid-cell selection-cell">
+                  <input type="checkbox" 
+                         [checked]="isRowSelected(item)"
+                         (change)="toggleRowSelection(item)">
+                </td>
+              }
+
+              @for (column of visibleColumns; track column.field) {
+                <td class="grid-cell data-cell"
+                    [class]="getCellClass(column, item)"
+                    [ngClass]="getCellClass(item, column)"
+                    [ngStyle]="getCellStyle(item, column)"
+                    [class.pinned-left]="column.pinned === 'left'"
+                    [class.pinned-right]="column.pinned === 'right'"
+                    [style.width]="column.width">
+                  
+                  @if (column.cellTemplate) {
+                    <!-- Custom cell template -->
+                    <span class="cell-content" [innerHTML]="getCellHtml(item, column, i)"></span>
+                  } @else if (column.template) {
+                    <ng-container *ngTemplateOutlet="column.template; context: { $implicit: item, column: column }">
+                    </ng-container>
+                  } @else if (config.editable && editingRow === item && column.editable !== false && !column.showIndex) {
+                    <input type="text" 
+                           [(ngModel)]="item[column.field]"
+                           class="cell-edit-input"
+                           (blur)="saveEdit(item)"
+                           (keyup.enter)="saveEdit(item)"
+                           (keyup.escape)="cancelEdit()">
+                  } @else {
+                    <span class="cell-content" (dblclick)="startEdit(item, column)">
+                      {{ formatCellValue(getCellValue(item, column, i), column) }}
+                    </span>
+                  }
+                </td>
+              }
+            </tr>
+
+            <!-- Row Details Expansion -->
+            @if (config.rowDetails && expandedRows.has(item)) {
+              <tr class="row-details">
+                <td [attr.colspan]="getColspan()" class="details-cell">
+                  <div class="details-content">
+                    <!-- Custom row details template would go here -->
+                    <pre>{{ item | json }}</pre>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        }
+
+        <!-- No Data Row -->
+        @if (displayData.length === 0 && !loading) {
+          <tr class="no-data-row">
+            <td [attr.colspan]="getColspan()" class="no-data-cell">
+              <div class="no-data-content">
+                <span class="no-data-icon">📭</span>
+                <p>No data available</p>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+
+      <!-- Summary Footer -->
+      @if (config.showSummary && hasAggregates() && displayData.length > 0) {
+        <tfoot>
+          <tr class="summary-row">
+            @if (config.selectable) {
+              <td class="grid-cell"></td>
+            }
+            @for (column of visibleColumns; track column.field) {
+              <td class="grid-cell summary-cell"
+                  [class.pinned-left]="column.pinned === 'left'"
+                  [class.pinned-right]="column.pinned === 'right'">
+                @if (column.aggregate) {
+                  <strong>{{ getAggregateLabel(column.aggregate) }}:</strong>
+                  <span class="summary-value">{{ getSummaryValue(column) }}</span>
+                }
+              </td>
+            }
+          </tr>
+        </tfoot>
+      }
+
+      <!-- Custom Footer -->
+      @if (config.showFooter && displayData.length > 0) {
+        <tfoot [class]="config.footerClass || ''">
+          <tr class="footer-row">
+            @if (config.selectable) {
+              <td class="grid-cell footer-cell"></td>
+            }
+            @for (column of visibleColumns; track column.field) {
+              <td class="grid-cell footer-cell"
+                  [class.pinned-left]="column.pinned === 'left'"
+                  [class.pinned-right]="column.pinned === 'right'">
+                @if (column.footerTemplate) {
+                  <ng-container *ngTemplateOutlet="column.footerTemplate; context: { data: displayData, column: column }">
+                  </ng-container>
+                } @else {
+                  <span class="footer-value">{{ getFooterValue(column) }}</span>
+                }
+              </td>
+            }
+          </tr>
+        </tfoot>
+      }
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  @if (config.pageable) {
+    <div class="grid-footer">
+      <div class="page-info">
+        Showing {{ getStartRecord() }} to {{ getEndRecord() }} of {{ totalRecords }} entries
+        @if (selectedRows.size > 0) {
+          <span class="selection-info">({{ selectedRows.size }} selected)</span>
+        }
+      </div>
+      
+      <div class="pagination-controls">
+        <!-- Page Size Selector -->
+        @if (config.pageSizes) {
+          <div class="page-size-selector">
+            <label>Show:</label>
+            <select [(ngModel)]="pageSize" (change)="onPageSizeChangeHandler()">
+              @for (size of config.pageSizes; track size) {
+                <option [value]="size">{{ size }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <!-- Page Navigation -->
+        <div class="pagination-buttons">
+          <button class="btn" 
+                  [disabled]="currentPage === 1"
+                  (click)="goToPage(1)"
+                  title="First Page">
+            ⏮
+          </button>
+          
+          <button class="btn" 
+                  [disabled]="currentPage === 1"
+                  (click)="goToPage(currentPage - 1)"
+                  title="Previous Page">
+            ◀
+          </button>
+
+          @for (page of getPageNumbers(); track page) {
+            <button class="btn" 
+                    [class.btn-primary]="page === currentPage"
+                    (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          }
+
+          <button class="btn" 
+                  [disabled]="currentPage === getTotalPages()"
+                  (click)="goToPage(currentPage + 1)"
+                  title="Next Page">
+            ▶
+          </button>
+
+          <button class="btn" 
+                  [disabled]="currentPage === getTotalPages()"
+                  (click)="goToPage(getTotalPages())"
+                  title="Last Page">
+            ⏭
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+  <!-- Modal Container -->
+  @if (showModal) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3 class="modal-title">
+            @if (modalType === 'edit') { Kaydı Düzenle }
+            @else if (modalType === 'delete') { Kaydı Sil }
+            @else if (modalType === 'add') { Yeni Kayıt Ekle }
+          </h3>
+          <button class="modal-close" (click)="closeModal()" title="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Modal content will be projected here via ng-template -->
+          <ng-content select="[gridModalContent]"></ng-content>
+        </div>
+      </div>
+    </div>
+  }

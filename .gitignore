@@ -10,6 +10,9 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # IDEs and editors
 .idea/
@@ -19,6 +22,7 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
+*.sublime-project
 
 # Visual Studio Code
 .vscode/*
@@ -36,7 +40,25 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+*.log
 
 # System files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS generated files
+.AppleDouble
+.LSOverride
