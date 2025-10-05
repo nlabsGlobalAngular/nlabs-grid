@@ -40,6 +40,7 @@
 ### Core Features
 - ✅ **Fully Customizable Width** - Set grid width via component inputs (`width`, `maxWidth`)
 - 🎨 **Advanced Theme System** - Light, Dark, and Auto modes with smooth transitions
+- 🎭 **Theme Control** - External theme control panel with show/hide toggle button
 - 📱 **Responsive Design** - Mobile-friendly with adaptive layouts
 - ⚡ **High Performance** - Optimized rendering for large datasets
 - 🎯 **TypeScript Support** - Full type safety and IntelliSense
@@ -256,16 +257,142 @@ export class MyComponent {
 
 ### 🎨 Theme System
 
-#### Auto Mode (Follows System Preference)
+The grid supports three theme modes with optional theme toggle button control.
+
+#### Theme Modes
+
+**1. Auto Mode (Follows System Preference)**
 ```html
 <app-data-grid [theme]="'auto'">
 </app-data-grid>
 ```
+Automatically switches between light and dark based on user's system preferences.
 
-#### Light Theme
+**2. Light Theme**
 ```html
 <app-data-grid [theme]="'light'">
 </app-data-grid>
+```
+Force light theme regardless of system preference.
+
+**3. Dark Theme**
+```html
+<app-data-grid [theme]="'dark'">
+</app-data-grid>
+```
+Force dark theme regardless of system preference.
+
+#### Dynamic Theme Switching
+
+**Method 1: Component Variable**
+```typescript
+export class MyComponent {
+  currentTheme: 'light' | 'dark' | 'auto' = 'auto';
+  
+  toggleTheme() {
+    this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+  }
+}
+```
+
+```html
+<button (click)="toggleTheme()">Toggle Theme</button>
+<app-data-grid [theme]="currentTheme">
+</app-data-grid>
+```
+
+**Method 2: External Theme Control Panel**
+
+Create a theme selector outside the grid:
+
+```typescript
+// In your component
+selectedTheme: 'light' | 'dark' | 'auto' = 'auto';
+showThemeButton = true; // Show/hide grid's theme toggle button
+
+changeTheme(theme: 'light' | 'dark' | 'auto') {
+  this.selectedTheme = theme;
+}
+```
+
+```html
+<!-- Theme Control Panel -->
+<div class="theme-control-panel">
+  <button (click)="changeTheme('light')" 
+          [class.active]="selectedTheme === 'light'">
+    Light
+  </button>
+  <button (click)="changeTheme('dark')"
+          [class.active]="selectedTheme === 'dark'">
+    Dark
+  </button>
+  <button (click)="changeTheme('auto')"
+          [class.active]="selectedTheme === 'auto'">
+    Auto
+  </button>
+</div>
+
+<!-- Optional: Control grid's theme button visibility -->
+<label>
+  <input type="checkbox" [(ngModel)]="showThemeButton">
+  Show theme toggle in grid toolbar
+</label>
+
+<!-- DataGrid with theme binding -->
+<app-data-grid
+    [theme]="selectedTheme"
+    [showThemeToggle]="showThemeButton"
+    [data]="gridData"
+    [columns]="columns">
+</app-data-grid>
+```
+
+#### Theme Toggle Button Control
+
+**Show Theme Button (Default)**
+```html
+<app-data-grid [showThemeToggle]="true">
+</app-data-grid>
+```
+
+**Hide Theme Button**
+```html
+<app-data-grid [showThemeToggle]="false">
+</app-data-grid>
+```
+
+This is useful when you want to control themes externally and hide the built-in theme toggle button in the grid toolbar.
+
+#### Theme Features
+
+- 🎨 **Light Mode**: High contrast, vibrant colors
+- 🌙 **Dark Mode**: Eye-friendly soft colors, reduced eye strain
+- 🔄 **Auto Mode**: Follows system preference, updates automatically
+- ⚡ **Instant Switching**: No page reload required
+- 💾 **State Management**: Theme preference maintained in component
+- 🎯 **CSS Variables**: Fully customizable via CSS custom properties
+- 🎭 **Smooth Transitions**: Animated theme changes
+
+---
+
+### 🎨 Theme Customization
+
+You can customize theme colors by overriding CSS custom properties:
+
+```css
+/* Light theme customization */
+.data-grid[data-theme="light"] {
+  --primary-color: #your-color;
+  --text-primary: #your-color;
+  --background: #your-color;
+}
+
+/* Dark theme customization */
+.data-grid[data-theme="dark"] {
+  --primary-color: #your-color;
+  --text-primary: #your-color;
+  --background: #your-color;
+}
 ```
 
 #### Dark Theme
@@ -460,6 +587,7 @@ exportToJSON();
 | `width` | `string` | `'100%'` | Grid width |
 | `maxWidth` | `string` | `'100%'` | Grid max-width |
 | `showAddButton` | `boolean` | `false` | Show add button in toolbar |
+| `showThemeToggle` | `boolean` | `true` | Show/hide theme toggle button in toolbar |
 
 ### Outputs
 
