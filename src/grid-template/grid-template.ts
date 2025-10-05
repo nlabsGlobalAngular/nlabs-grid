@@ -21,8 +21,17 @@ export class GridTemplate implements OnInit {
   gridWidth = '100%';
   gridMaxWidth = '1400px';
   
+  // Tema ayarları
+  selectedTheme: 'light' | 'dark' | 'auto' = 'auto';
+  showThemeButton = true; // Tema değiştir butonunu göster/gizle
+  
   ngOnInit() {
     console.log('GridTemplate ngOnInit - gridData:', this.gridData.length, 'columns:', this.columns.length);
+  }
+  
+  // Tema değiştir
+  changeTheme(theme: 'light' | 'dark' | 'auto') {
+    this.selectedTheme = theme;
   }
   
   gridData = [

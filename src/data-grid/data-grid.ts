@@ -27,6 +27,7 @@ export class DataGrid implements OnInit, OnChanges, AfterContentInit {
   @Input() width: string = '100%'; // Grid width (e.g., '100%', '1200px', '80vw')
   @Input() maxWidth: string = '100%'; // Grid max-width (e.g., '1400px', '90%')
   @Input() showAddButton: boolean = false; // Show add button in toolbar
+  @Input() showThemeToggle: boolean = true; // Show/hide theme toggle button
   @Input() config: GridConfig = {
     pageable: true,
     pageSize: 25,
@@ -189,6 +190,9 @@ export class DataGrid implements OnInit, OnChanges, AfterContentInit {
     }
     if (changes['data'] && !changes['data'].firstChange) {
       this.loadData();
+    }
+    if (changes['theme']) {
+      this.detectTheme();
     }
   }
 
